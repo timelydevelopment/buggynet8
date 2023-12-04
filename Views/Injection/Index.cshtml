@@ -1,0 +1,171 @@
+@{
+    ViewData["Title"] = "Injection Demo";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            text-align: left;
+        }
+        a {
+            display: block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <a href="/">Go back home</a>
+        <h2>Injection Demo</h2>
+        <p>
+            Injection is listed in the OWASP Top 10 as one of the most critical web application security risks. 
+        </p>
+        <p>
+            Use this simple form to search for your favourite fruit! 🍌🍎🍊
+            <br>
+            Then see if you can find what database is running, what 'admin' Users exist in the database and obtain the admin password.
+        </p>
+        <form id="search" name="search" action="/Injection/Search" method="get">
+        <input type="text" name="term" id="term">
+            <button type="submit" name="search">Search</button>
+        </form>
+<div>
+    Results:
+    <ul id="results"></ul>
+</div>
+         <div class="container">
+        <p>Submit the form to check your answers</p>
+        <p><form id="answers" name="answers">
+        <label>DB Engine <input name="database" type="password" placeholder="database engine"> </label><b id="database-answer">&#x2715</b>
+            <br>
+            <label>Admin username <input name="admin" type="password" placeholder="admin user"> </label><b id="admin-answer">&#x2715</b>
+            <br>
+            <label>Admin password <input name="password" type="password" placeholder="admin password"> </label><b id="password-answer">&#x2715</b>
+            <br>
+            <button>Check answers</button>
+        </form></p>
+    </div>
+    </div>
+   <script>
+
+
+
+            // Function to send POST request
+        async function sendRequest(method, endpointUrl, params) {
+                   const formData = new FormData();
+ 
+        for ( var key in params ) {
+            formData.append(key, params[key]);
+        }
+
+            const queryString = new URLSearchParams(formData).toString()
+     
+            endpointUrl = endpointUrl + (method=="GET"? "?" + queryString: "");
+            console.log(method, endpointUrl, params);
+        // Create an object with the data to be sent in the request body
+     
+        try {
+            // Send the POST request
+            const response = await fetch(endpointUrl, {
+            method: method,
+            
+            body: method=="GET"? undefined: formData
+            });
+
+            // Parse the JSON response
+            const jsonResponse = await response.json();
+
+            // Return the JSON object with boolean fields
+            return jsonResponse;
+        } catch (error) {
+            // Handle errors, e.g., network issues or server errors
+            console.error('Error:', error);
+            return { error: 'An error occurred' };
+        }
+        }
+
+
+        document.getElementById('search').onsubmit = function() {
+            sendRequest('GET', '/Injection/Search', {'term': document.search.term.value})
+            .then(response => {
+                var list = document.getElementById('results');
+                list.innerHTML = '';
+                 for (i = 0; i < response.length; ++i) {
+                    let li = document.createElement('li');
+                    li.innerText = response[i].name + ' $' + response[i].price;
+                    list.appendChild(li);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+            return false;
+            
+        }
+
+
+
+        document.getElementById('answers').onsubmit = function() {
+            sendRequest('POST', '/Injection/Check', {
+                'database': document.answers.database.value,
+                'admin': document.answers.admin.value,
+                'password': document.answers.password.value
+            })
+            .then(response => {
+                document.getElementById('database-answer').innerHTML = response.database ? "&#x2713;" : " &#x2715;";
+                document.getElementById('admin-answer').innerHTML=  response.admin? "&#x2713;" : " &#x2715;";
+                document.getElementById('password-answer').innerHTML=  response.password? "&#x2713;" : " &#x2715;";
+                console.log('Response:', response);
+                // Access boolean fields: response.header and response.config
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            return false;
+        };
+    </script>
+</body> 
+</html>

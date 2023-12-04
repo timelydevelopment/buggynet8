@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Admin Area - Congratulations";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .congrats-message {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: auto;
+            width: 60%;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="congrats-message">
+        <h1>Congratulations!</h1>
+        <p>You have successfully accessed the admin-only area. This page is intended to contain sensitive information for administrators only.</p>
+        <p><b>Broken Access Control:</b> The core lesson is that the server trusts the cookie value without verification. There's no additional server-side check to validate whether the user truly has admin privileges. This lack of server-side validation leads to broken access control, where unauthorized users can access admin functionalities.</p>
+        <p>Remember, in a real-world application, this area should be protected with robust authentication and authorization mechanisms to prevent unauthorized access.</p>
+        <p><a href="/">Go back home</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Broken Access Control Demo";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            text-align: left;
+        }
+        a {
+            display: block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/">Go back home</a>
+        <h2>Broken Access Control Demo</h2>
+        <p>
+            Broken Access Control is listed in the OWASP Top 10 as one of the most critical web application security risks. It occurs when an application does not properly restrict access to its features and data, allowing unauthorized users to perform actions they should not be able to.
+        </p>
+        <p>
+            This demo login page is part of a simple exercise to understand the importance of server-side validation in mitigating broken access control. One of the The key aspects of this demonstration is to show how reliance on client-side data (like cookies) for access control can be insecure, as these can be easily manipulated. Clicking on each button below assigns a cookie with a unique, base64-encoded value. The objective is to get to the "Admin" page by tampering with the cookie.
+        </p>
+        <form asp-action="Login" method="post">
+            <button type="submit" name="role" value="User">User Dashboard</button>
+            <button type="submit" name="role" value="oops">Admin Dashboard</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+@{
+    ViewData["Title"] = "Server Side Request Forgery Demo";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            text-align: left;
+        }
+        a {
+            display: block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <a href="/">Go back home</a>
+        <h2>Server Side Request Forgery Demo</h2>
+        <p>
+            Server Side Request Forgery Demo is listed in the OWASP Top 10 as one of the most critical web application security risks. 
+        </p>
+        <p>
+            Use this simple form to discover some secret values! and check your results using the form below. <span class="hint" style="display:none;">Hint: @ViewBag.Hint</span>
+        </p>
+        <form action="/Ssrf/GetReport" method="post">
+            <select id="report" name="report">
+                <option value="https://microsoft.com">Microsoft
+                 report</option>
+                <option value="https://google.com">Google report</option>
+            </select>
+            <button type="submit" name="role" value="User">Get report</button>
+        </form>
+         <div class="container">
+        <p>Submit the form to show that you found the secrets!</p>
+        <p><form id="answers" name="answers">
+            <input name="header" type="password" placeholder="header secret"> <b id="header-answer">&#x2715</b>
+            <br>
+            <input name="config" type="password" placeholder="appsettings secret"> <b id="config-answer">&#x2715</b>
+            <br>
+            <button>Check answers</button>
+        </form></p>
+    </div>
+    </div>
+   <script>
+            // Function to send POST request
+        async function sendPostRequest(header, config) {
+        // Specify the endpoint URL
+        const endpointUrl = '/Ssrf/CheckAnswer';
+
+        // Create an object with the data to be sent in the request body
+     
+       const formData = new FormData();
+        formData.append('header', header);
+        formData.append('config', config);
+
+        try {
+            // Send the POST request
+            const response = await fetch(endpointUrl, {
+            method: 'POST',
+           
+            body: formData
+            });
+
+            // Parse the JSON response
+            const jsonResponse = await response.json();
+
+            // Return the JSON object with boolean fields
+            return jsonResponse;
+        } catch (error) {
+            // Handle errors, e.g., network issues or server errors
+            console.error('Error:', error);
+            return { error: 'An error occurred' };
+        }
+        }
+
+
+
+
+        document.getElementById('answers').onsubmit = function() {
+            sendPostRequest(document.answers.header.value, document.answers.config.value)
+            .then(response => {
+                document.getElementById('header-answer').innerHTML = response.header ? "&#x2713;" : " &#x2715;";
+                document.getElementById('config-answer').innerHTML=  response.config? "&#x2713;" : " &#x2715;";
+                console.log('Response:', response);
+                // Access boolean fields: response.header and response.config
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+                       console.log()
+            return false;
+        };
+    </script>
+</body> 
+</html>

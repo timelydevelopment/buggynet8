@@ -1,0 +1,157 @@
+@{
+    ViewData["Title"] = "Integrity Demo";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            text-align: left;
+        }
+        a {
+            display: block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <a href="/">Go back home</a>
+        <h2>Software and Data Integrity Failures Demo</h2>
+        <p>
+            Software and Data Integrity Failures is listed in the OWASP Top 10 as one of the most critical web application security risks. 
+        </p>
+        <p>
+            Use this simple form to format your JSON nicely!
+            <br>
+        </p>
+        <form id="format" name="format" action="/Integrity/Format" method="get">
+            <textarea id="json" name="json" rows="20" cols="50"></textarea>
+            <br>
+
+            <button type="submit" name="format">Format</button>
+        </form>
+        <p>
+            Then manipulate the JSON to do naughty things. We've created a file called: <strong>@ViewBag.FileName;</strong>
+            See if you can make it ReadOnly
+        </p>
+
+         <div class="container">
+        <p>Submit the form to check your answers</p>
+        <p><form id="answers" name="answers">
+            <h1 id="result">Nope its not ReadOnly</h1>
+             <br>
+            <button>Test file</button>
+        </form></p>
+    </div>
+    </div>
+   <script>
+
+
+
+            // Function to send POST request
+        async function sendRequest(method, endpointUrl, params) {
+                   const formData = new FormData();
+ 
+        for ( var key in params ) {
+            formData.append(key, params[key]);
+        }
+
+            const queryString = new URLSearchParams(formData).toString()
+     
+            endpointUrl = endpointUrl + (method=="GET"? "?" + queryString: "");
+            console.log(method, endpointUrl, params);
+        // Create an object with the data to be sent in the request body
+     
+        try {
+            // Send the POST request
+            const response = await fetch(endpointUrl, {
+            method: method,
+            
+            body: method=="GET"? undefined: formData
+            });
+
+            // Parse the JSON response
+            const jsonResponse = await response.text();
+
+            // Return the JSON object with boolean fields
+            return jsonResponse;
+        } catch (error) {
+            // Handle errors, e.g., network issues or server errors
+            console.error('Error:', error);
+            return { error: 'An error occurred' };
+        }
+        }
+
+
+        document.getElementById('format').onsubmit = function() {
+            sendRequest('GET', '/Integrity/Format', {'json': document.format.json.value})
+            .then(response => {
+                document.format.json.value = response;
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+            return false;
+            
+        }
+
+
+
+        document.getElementById('answers').onsubmit = function() {
+            sendRequest('POST', '/Integrity/Check')
+            .then(response => {
+                document.getElementById('result').innerHTML = response == "true" ? "Yes! You did it! &#x2713;" : "Nope its not ReadOnly &#x2715;";
+                console.log('Response:', response);
+                // Access boolean fields: response.header and response.config
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            return false;
+        };
+    </script>
+</body> 
+</html>

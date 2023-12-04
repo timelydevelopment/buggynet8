@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Regular User Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .dashboard {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .hint {
+            padding: 10px;
+            background-color: #ffffe0;
+            border: 1px solid #ffeb3b;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .code-snippet {
+            display: none;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Regular User Page</h1>
+    <div class="dashboard">
+        <p>Welcome to the user dashboard. This page is accessible to regular users.</p>
+        <p>You should try to access the <a href="/Home/AdminView">Home/AdminView</a> page by tampering the "MyVulnerableCookie" cookie value.</p>
+    </div>
+
+    <div class="hint" onclick="document.getElementById('codeSnippet').style.display='block'">
+        Click here to see the vulnerable code
+    </div>
+
+    <div class="code-snippet" id="codeSnippet">
+        public IActionResult AdminView()
+        {
+            if (HttpContext.Request.Cookies.TryGetValue("MyVulnerableCookie", out string encodedRole))
+            {
+                var role = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(encodedRole));
+
+                if (role == "Admin")
+                {
+                    return View();
+                }
+            }
+
+            return RedirectToAction("Unauthorized");
+        }
+    </div>
+
+    <script>
+        document.getElementById('codeSnippet').style.display = 'none';
+    </script>
+</body>
+</html>

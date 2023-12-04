@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Buggy .net site for security training";
+}
+
+<header>
+    <h1>Buggy .net site for security training</h1>
+</header>
+
+<main>
+    <section>
+        <h2>About the OWASP Top 10</h2>
+        <p>
+            The OWASP Top 10 is a standard awareness document for developers and web application security. It represents a broad consensus about the most critical security risks to web applications. Understanding these risks and how they might be relevant to our development processes is crucial in building secure applications. This demo website provides basic examples of some of these vulnerabilities, tailored to our unique development environment and practices.
+        </p>
+    </section>
+
+    <section>
+        <h2>OWASP Top 10 Vulnerabilities</h2>
+        <ul>
+            <li>
+                <h3>Broken Access Control</h3>
+                <p>Demonstrates how improper implementation of access control can lead to unauthorized access.</p>
+                <a href="@Url.Action("BrokenAccessControl", "Home")" class="button">View Demo</a>
+            </li>
+            <li><h3>Injection & Cryptographic failures</h3>
+            <p>Demonstrates how improper parameter handling can cause Injection leading to data loss and exposure of weak cryptography</p>
+                <a href="@Url.Action("Index", "Injection")" class="button">View Demo</a></li>
+            <!-- 
+            <li><h3>[Vulnerability 3 Name]</h3><button disabled>Coming Soon</button></li>
+            -->
+            <li><h3>8 Data & Integrity failures</h3>
+            <p>Demonstrates how improper deserialization can be catastrophic
+                <strong>NB: If you get a 500, just refresh!</strong>
+            </p>            
+            <a href="@Url.Action("Index", "Integrity")" class="button">View demo</a></li>
+            
+            <li><h3>10 - SSrf</h3> <a href="@Url.Action("Index", "Ssrf")" class="button">View demo</a></li>
+        </ul>
+    </section>
+</main>
+
+<style>
+    header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+    }
+    main {
+        padding: 20px;
+    }
+    section {
+        margin-bottom: 20px;
+    }
+    .button {
+        background-color: #008CBA;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .button:hover {
+        background-color: #005f73;
+    }
+</style>
