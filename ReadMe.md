@@ -2,8 +2,9 @@
 
 This is a purposely buggy web app, using modern(ish) .NET techniques for education purposes.
 
-NB: DO NOT PUT your organisation at risk by running this application anywhere publicly accesible.
+NB: DO NOT PUT your organisation at risk by running this application anywhere publicly accessible.
 This app should ONLY be run locally or in a private network, and should be removed after use to mitigate the risk.
+
 **The security bugs in this app are serious enough to cause harm to your resources if exploited.**
 
 ## Setup 
