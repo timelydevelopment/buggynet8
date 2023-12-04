@@ -14,6 +14,8 @@ To set up:
 2. Ensure you have .NET 8 installed `winget install Microsoft.DotNet.SDK.8`
 3. Run using the dotnet cli `dotnet run` or `dotnet watch` for hot-reloading
 
+NB: The database runs in-memory just as-needed so no setup is needed
+
 ## TODO
 * Many of the examples are very contrived. Would be nice to make them more realistic
 * More examples of varying difficulties
